@@ -21,6 +21,7 @@ import Profile from './components/profile/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import PrivateRoute from './components/routing/PrivateRoute';
+import GameDashboard1 from './components/gameboard/gameboard1';
 import './App.css';
 
 //Redux
@@ -52,6 +53,7 @@ const App = () => {
               <Route exact path='/profiles' component={Profiles} />
               <Route exact path='/profile/:id' component={Profile} />
               <PrivateRoute exact path='/dashboard' component={Dashboard} />
+              <PrivateRoute exact path = "/gameboard1" component = {GameDashboard1} />
               <PrivateRoute
                 exact
                 path='/create-profile'
