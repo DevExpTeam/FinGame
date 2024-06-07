@@ -1,4 +1,14 @@
 /* Global Styles */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
 :root {
   --primary-color: #9032ED;
   --dark-color: #787d82;

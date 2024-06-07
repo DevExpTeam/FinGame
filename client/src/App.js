@@ -22,7 +22,8 @@ import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import PrivateRoute from './components/routing/PrivateRoute';
 import GameDashboard1 from './components/gameboard/gameboard1';
-import './App.css';
+import './index.css';
+import './main.css';
 
 //Redux
 import { Provider } from 'react-redux';
