@@ -21,7 +21,7 @@ import Profile from './components/profile/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import PrivateRoute from './components/routing/PrivateRoute';
-import GameDashboard1 from './components/gameboard/gameboard1';
+import GameDashboard1 from './components/gameboard/Gameboard1';
 import './index.css';
 import './main.css';
 
@@ -46,7 +46,7 @@ const App = () => {
         <Fragment>
           <Navbar />
           <Route exact path='/' component={Landing} />
-          <section className='container'>
+          <section className='px-36 py-20'>
             <Alert />
             <Switch>
               <Route exact path='/register' component={Register} />
@@ -54,7 +54,7 @@ const App = () => {
               <Route exact path='/profiles' component={Profiles} />
               <Route exact path='/profile/:id' component={Profile} />
               <PrivateRoute exact path='/dashboard' component={Dashboard} />
-              <PrivateRoute exact path = "/gameboard1" component = {GameDashboard1} />
+              <PrivateRoute exact path = "/Gameboard1" component = {GameDashboard1} />
               <PrivateRoute
                 exact
                 path='/create-profile'

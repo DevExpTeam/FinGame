@@ -20,7 +20,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         </Link>
       </li> */}
       <li>
-        <Link to='/gameboard1'>
+        <Link to='/Gameboard1'>
           <span className='hide-sm'>GameBoard1</span>
         </Link>
       </li>

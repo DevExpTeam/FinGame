@@ -592,3 +592,41 @@ button {
   justify-content: center;
   text-align: center;
 }
+
+
+/* grow effect */
+
+@keyframes grow {
+  0% {
+    transform: scale(0.3);
+  }
+  100% {
+    transform: scale(1); /* Change this to however big you want the element to get */
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1; /* Change this to however big you want the element to get */
+  }
+}
+
+.grow {
+  animation: grow 0.3s ease-out;
+}
+
+.fadeIn {
+  animation: fadeIn 0.7s ease-out;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: rgb(255, 255, 255, 1);
+}

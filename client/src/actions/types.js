@@ -22,3 +22,5 @@ export const ADD_POST = 'ADD_POST';
 export const GET_POST = 'GET_POST';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+export const GET_GAME1 = 'GET_GAME1';
+export const GAME1_ERROR = 'GAME1_ERROR';
