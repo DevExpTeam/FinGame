@@ -9,7 +9,8 @@ import bonusSound from '../../sound/bonus.wav';
 import fireSound from '../../sound/fire.mp3';
 import endSound from '../../sound/end.wav';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { getGame1 } from '../../actions/game1';
+import { getGame1 } from '../../actions/game';
+import { getScores } from '../../actions/scores';
 import ScoreboardItem from './ScoreboardItem';
 import video0 from '../../video/0.webm';
 import video3 from '../../video/3.webm';
@@ -39,25 +40,16 @@ const categoryNames = {
 const GameDashboard1 = ({
   auth: { user },
   getGame1,
-  game1: { game1, loading },
+  getScores,
+  scores: { scores, loading: scoreLoading },
+  game1: { game1, loading: gameLoading },
 }) => {
 
   const [source, setSource] = useState(0);          //used to keep the video source
   const [score, setScore] = useState(0);
   const [count, setCount] = useState(0);          //used to count the continuous success
   const [total, setTotal] = useState(0);          //used to count total success. If it reaches 10, game over
-  const [boxes, setBoxes] = useState({
-    account: game1,
-    currentAssets: [],
-    propertyPlantEquipment: [],
-    intangibleAssets: [],
-    financialAssets: [],
-    digitalAssets: [],
-    currentLiabilities: [],
-    longTermLiabilities: [],
-    accruals: [],
-    capital: [],
-  });
+  const [boxes, setBoxes] = useState({});
 
   const openFlame = (source) => {
     new Audio(fireSound).play();
@@ -156,13 +148,29 @@ const GameDashboard1 = ({
   useEffect(() => {
     new Audio(startSound).play();
     getGame1();
+    getScores(1, user?.email);
   }, []);
+
+  useEffect(() => {
+    setBoxes({
+      account: game1,
+      currentAssets: [],
+      propertyPlantEquipment: [],
+      intangibleAssets: [],
+      financialAssets: [],
+      digitalAssets: [],
+      currentLiabilities: [],
+      longTermLiabilities: [],
+      accruals: [],
+      capital: [],
+    });
+  }, [game1]);
 
   return (
     <div className="flex justify-between h-full py-10">
       {source ?
         <div className="fixed transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-          <video autoPlay loop muted className="w-96 h-96 grow">
+          <video autoPlay loop muted className="grow" style={{ width: "150rem", height: "150rem" }}>
             <source src={source} type="video/webm" />
           </video>
         </div>
@@ -188,7 +196,7 @@ const GameDashboard1 = ({
           <Droppable droppableId="account">
             {(provided, snapshot) => (
               <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-gray-200 bg-white rounded-lg w-96 min-h-96 p-1 overflow-y-auto">
-                {boxes.account.map((item, index) => (
+                {boxes.account?.map((item, index) => (
                   <Draggable key={item._id} draggableId={item._id} index={index}>
                     {(provided, snapshot) => (
                       <Tooltip title = {item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
@@ -210,7 +218,7 @@ const GameDashboard1 = ({
                 <div className="flex flex-col items-center mt-4">
                   <h3 className="mb-2 font-bold text-md text-blue-600">{categoryNames[droppableId]}</h3>
                   <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-blue-200 bg-white rounded-lg w-96 min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
-                    {boxes[droppableId].map((item, index) => (
+                    {boxes[droppableId]?.map((item, index) => (
                       <Draggable key={item._id} draggableId={item._id} index={index}>
                         {(provided, snapshot) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 py-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
@@ -234,7 +242,7 @@ const GameDashboard1 = ({
                 <div className="flex flex-col items-center mt-4">
                   <h3 className="mb-2 font-bold text-md text-green-600">{categoryNames[droppableId]}</h3>
                   <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-green-200 bg-white rounded-lg w-96 min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
-                    {boxes[droppableId].map((item, index) => (
+                    {boxes[droppableId]?.map((item, index) => (
                       <Draggable key={item._id} draggableId={item._id} index={index}>
                         {(provided, snapshot) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
@@ -253,13 +261,13 @@ const GameDashboard1 = ({
         <div className="flex flex-col items-center pt-36 pl-5">
           <ScoreboardItem
             label="Max Score"
-            value={100}
+            value={scores?.sum}
             bgColor="bg-purple-500"
             textColor="text-white"
           />
           <ScoreboardItem
             label="Average Score"
-            value={80}
+            value={scores?.average.toFixed(2)}
             bgColor="bg-yellow-500"
             textColor="text-white"
           />
@@ -277,14 +285,16 @@ const GameDashboard1 = ({
 
 GameDashboard1.propTypes = {
   auth: PropTypes.object.isRequired,
+  score: PropTypes.object.isRequired,
   game1: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  scores: state.scores,
   game1: state.game1,
 });
 
-export default connect(mapStateToProps, { getGame1 })(
+export default connect(mapStateToProps, { getGame1, getScores })(
   GameDashboard1
 );

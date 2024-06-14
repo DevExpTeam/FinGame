@@ -19,10 +19,11 @@ app.get('/', (req, res) => {
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
-app.use('/api/game1', require('./routes/api/game1'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/scores', require('./routes/api/scores'));
+app.use('/api/game1', require('./routes/api/game1'));
 
 const PORT = process.env.PORT || 5000;
 

@@ -9,7 +9,7 @@ axios. defaults. baseURL = 'http://localhost:5000';
 // Get posts
 export const getGame1 = () => async (dispatch) => {
   try {
-    const res = await axios.get('/api/game1');
+    const res = await axios.get("/api/game1");
 
     dispatch({
       type: GET_GAME1,
