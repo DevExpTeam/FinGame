@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Tooltip from '@mui/material/Tooltip';
+import Swal from "sweetalert2";
 import startSound from '../../sound/start.mp3';
 import rightSound from '../../sound/right.wav';
 import wrongSound from '../../sound/wrong.mp3';
 import bonusSound from '../../sound/bonus.wav';
 import fireSound from '../../sound/fire.mp3';
-import endSound from '../../sound/end.wav';
+import victorySound from '../../sound/victory.wav';
+import endSound from '../../sound/end.mp3';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getGame1 } from '../../actions/game';
-import { getScores } from '../../actions/scores';
+import { getScores, addScores } from '../../actions/scores';
 import ScoreboardItem from './ScoreboardItem';
 import video0 from '../../video/0.webm';
 import video3 from '../../video/3.webm';
@@ -41,6 +43,7 @@ const GameDashboard1 = ({
   auth: { user },
   getGame1,
   getScores,
+  addScores,
   scores: { scores, loading: scoreLoading },
   game1: { game1, loading: gameLoading },
 }) => {
@@ -50,6 +53,7 @@ const GameDashboard1 = ({
   const [count, setCount] = useState(0);          //used to count the continuous success
   const [total, setTotal] = useState(0);          //used to count total success. If it reaches 10, game over
   const [boxes, setBoxes] = useState({});
+  const [addition, setAddition] = useState({ value: 0, bonus: 0 });    //show addition to the score
 
   const openFlame = (source) => {
     new Audio(fireSound).play();
@@ -59,6 +63,30 @@ const GameDashboard1 = ({
     }, 900);
   }
 
+  const openEndAlert = async () => {
+    const result = await Swal.fire({
+      title: score >= 80 ? "Congratulations!" : "Cheer up!",
+      text: "Would you like to continue the game?\nYour bonus will also carry over.",
+      type: "success",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#2ECC71",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      cancelButtonColor: "#E74C3C",
+      showCloseButton: true,
+    });
+
+    if (result.value) initialize();
+  }
+
+  const initialize = () => {
+    new Audio(startSound).play();
+    getGame1();
+    getScores(1, user?.email);
+    setScore(0);
+    setTotal(0);
+  }
+  
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -76,15 +104,19 @@ const GameDashboard1 = ({
     else if(source.droppableId !== "account")  return;   //go back to account box
     else if(srcItems[source.index].answer === destination.droppableId) {
       //success case
+
+      //when it is final success
       if(total + 1 === 10) {
-        //when it is final success
-        openFlame(video10)
+        //save scores
+        addScores({ gameType: 1, userEmail: user?.email, score: score + 10 + count });
+        //show msgbox
         setTimeout(() => {
-          new Audio(endSound).play();
-          //show msgbox
-        }, 1000);
+          score >= 80 ? new Audio(victorySound).play() : new Audio(endSound).play();
+          openEndAlert();
+        }, count + 1 >= 3 ? 1000 : 600);
       }
-      else if(count + 1 >= 3) {
+
+      if(count + 1 >= 3) {
         //when continuously success for more than 3 times
         switch (count + 1) {
           case 3:
@@ -124,13 +156,23 @@ const GameDashboard1 = ({
       setCount(count + 1);
       setTotal(total + 1);
       setScore(score + 10 + count);
+      setAddition({ value: 10, bonus: count });
+      setTimeout(() => {
+        setAddition({ value: 0, bonus: 0 });
+      }, 900);
     }
     else {
       //wrong case
       new Audio(wrongSound).play();
       setCount(0);            //initialize count
       if(score < 2) setScore(0);
-      else setScore(score - 2);
+      else {
+        setScore(score - 2);
+        setAddition({ value: -2, bonus: 0 });
+        setTimeout(() => {
+          setAddition({ value: 0, bonus: 0 });
+        }, 900);
+      }
       return;
     }
 
@@ -146,9 +188,7 @@ const GameDashboard1 = ({
   };
 
   useEffect(() => {
-    new Audio(startSound).play();
-    getGame1();
-    getScores(1, user?.email);
+    initialize();
   }, []);
 
   useEffect(() => {
@@ -177,18 +217,6 @@ const GameDashboard1 = ({
       :
         <></>
       }
-      {/* <button onClick={()=>{getGame1();setBoxes({
-        account: game1,
-        currentAssets: [],
-        propertyPlantEquipment: [],
-        intangibleAssets: [],
-        financialAssets: [],
-        digitalAssets: [],
-        currentLiabilities: [],
-        longTermLiabilities: [],
-        accruals: [],
-        capital: [],
-      })}}>sdfsdf</button> */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
           <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
@@ -261,20 +289,32 @@ const GameDashboard1 = ({
         <div className="flex flex-col items-center pt-36 pl-5">
           <ScoreboardItem
             label="Max Score"
-            value={scores?.sum}
-            bgColor="bg-purple-500"
+            value={scores?.max}
+            bgColor="bg-green-400"
             textColor="text-white"
           />
           <ScoreboardItem
             label="Average Score"
-            value={scores?.average.toFixed(2)}
-            bgColor="bg-yellow-500"
+            value={scores?.average?.toFixed(2)}
+            bgColor="bg-amber-500"
             textColor="text-white"
           />
+          {addition.value !== 0 &&
+            <div className="w-40 fade-out-move-up">
+              {addition.bonus !== 0 &&
+                <div className="fixed w-40 text-center font-semibold text-lg transform -translate-y-full" style={{ color: "#33CCFF" }}>
+                  {"+" + addition.bonus + "💎"}
+                </div>
+              }
+              <div className="fixed w-40 text-center font-bold text-3xl" style={{ color: addition.value > 0 ? "#27AE60" : "#C0392B" }}>
+                {addition.value > 0 ? "+" + addition.value : "–" + (-addition.value)}
+              </div>
+            </div>
+          }
           <ScoreboardItem
             label="Current Score"
             value={score}
-            bgColor="bg-pink-500"
+            bgColor="bg-purple-500"
             textColor="text-white"
           />
         </div>
@@ -295,6 +335,6 @@ const mapStateToProps = (state) => ({
   game1: state.game1,
 });
 
-export default connect(mapStateToProps, { getGame1, getScores })(
+export default connect(mapStateToProps, { getGame1, getScores, addScores })(
   GameDashboard1
 );

@@ -81,7 +81,7 @@ const App = () => {
             <Redirect from='*' to='/' component={Landing} />
           </section>
         </Fragment>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </Provider>
   );
