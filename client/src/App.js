@@ -30,15 +30,28 @@ import { Provider } from 'react-redux';
 import store from'./store';
 import setAuthToken from './utils/setAuthToken';
 import { loadUser } from './actions/auth';
-import { createTheme, Divider, IconButton, Link, List, ListItemButton, ThemeProvider, Toolbar, Box , Container} from '@mui/material';
+import { createTheme, Divider, IconButton, Link, List, ListItemButton, ThemeProvider, Toolbar, Box , Container, Drawer, styled} from '@mui/material';
 import { CustomAppBar, CustomDrawer } from './components/templates/CustomAppBar';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
 const defaultTheme = createTheme()
+
+const drawerWidth = 240;
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
 
 const App = () => {
   const [toggleOpen, setToggleOpen] = React.useState(true);
@@ -54,7 +67,7 @@ const App = () => {
     <Provider store={store} >
       <Router>
       <ThemeProvider theme={defaultTheme}>
-        <Box sx={{ display: 'flex' }} >
+        <Box  >
         <CustomAppBar position="absolute" open={toggleOpen}>
             <Toolbar
                 sx={{
@@ -80,7 +93,19 @@ const App = () => {
             </CustomAppBar>
           
       
-          <CustomDrawer variant="permanent" open={toggleOpen}>
+          <Drawer 
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                  width: drawerWidth,
+                  boxSizing: 'border-box',
+                },
+              }} 
+              variant="persistent" 
+              anchor="left"
+              open={toggleOpen}
+          > 
               <Toolbar
                   sx={{
                   display: 'flex',
@@ -90,19 +115,20 @@ const App = () => {
                   }}
               >
                   <IconButton onClick={toggleDrawer} style={{color: "white", background : "black"}}>
-                      <MenuIcon />
+                      <ChevronLeftIcon />
                   </IconButton>
               </Toolbar>
               <List component="nav">
-                  <Link to="/gameBoard1">
                     <ListItemButton>
+                      <Link to='/GameBoard1'>
                         GameBoard1
+                      </Link>
                     </ListItemButton>
-                  </Link>
+                  
                   
                 <Divider sx={{ my: 1 }} />
               </List>    
-          </CustomDrawer>
+          </Drawer>
 
           <Box
               component="main"

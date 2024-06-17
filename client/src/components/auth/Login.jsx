@@ -30,7 +30,7 @@ const Login = ({ login, isAuthenticated }) => {
   return (
     <Fragment>
       <section class="bg-gray-100 dark:bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0" style={{height : "90vh"}}>
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0" style={{height : "95vh"}}>
             <a href="#" class="font-serif flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white">
                 <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                     Sign In to GameBoard
