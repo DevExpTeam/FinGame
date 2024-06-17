@@ -4,32 +4,90 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 import logo from '../../img/logo-icon.png';
+import { Avatar, Badge, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip } from '@mui/material';
 
-const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+
+
+const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  
   const authLinks = (
     <ul>
-      {/* <li>
-        <Link to='/profiles'>Developers</Link>
-      </li>
       <li>
-        <Link to='/posts'>Posts</Link>
-      </li>
-      <li>
-        <Link to='/dashboard'>
-          <i className='fas fa-user' />{' '}
-          <span className='hide-sm'>Dashboard</span>
-        </Link>
-      </li> */}
-      <li>
-        <Link to='/Gameboard1'>
-          <span className='hide-sm'>GameBoard1</span>
+        <Link to='/Gameboard1' className="flex text-center items-center">
+          <span className='hide-sm font-serif text-center text-xl italic'>GameBoard1</span>
         </Link>
       </li>
       <li>
-        <a onClick={logout} href='#!'>
-          <i className='fas fa-sign-out-alt'></i>{' '}
-          <span className='hide-sm'>Logout</span>
-        </a>
+      <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? 'account-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
+            <p  className='px-1 font-serif text-center text-white text-xl italic'>
+              {user ? user.name: ""}
+            </p>
+          </IconButton>
+          
+        </Tooltip>
+      <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&::before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+
+          <MenuItem onClick={handleClose}>
+            Add another account
+          </MenuItem>
+
+          <MenuItem onClick={logout}> 
+              <i className='fas fa-sign-out-alt'></i>{' '}
+              <span className='hide-sm'>Logout</span>
+          </MenuItem>
+        </Menu>
       </li>
     </ul>
   );
@@ -50,18 +108,21 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   );
 
   return (
-    
-    <nav className='navbar bg-dark border-gray-200 dark:bg-gray-900 text-2xl'>
-      <h1>
-        <Link to='/' className= "flex justify-center align-center items-center">
-          <img src={logo} style={{width : "150px"}}/>
-          <p className='font-serif text-center text-3xl italic'> Games </p>
-        </Link>
-      </h1>
-      {!loading && (
-        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
-      )}
-    </nav>
+  
+
+    <nav className='navbar bg-dark border-gray-200 text-xl'>
+       <h1>
+         <Link to='/' className= "flex justify-center align-center items-center">
+           <img src={logo} style={{width : "150px", background : "white", borderRadius : 15, marginRight : 15}}/>
+         </Link>
+       </h1>
+       {!loading && (
+         <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+       )}
+
+     </nav>
+             
+       
   );
 };
 

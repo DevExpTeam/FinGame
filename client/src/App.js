@@ -30,60 +30,144 @@ import { Provider } from 'react-redux';
 import store from'./store';
 import setAuthToken from './utils/setAuthToken';
 import { loadUser } from './actions/auth';
+import { createTheme, Divider, IconButton, Link, List, ListItemButton, ThemeProvider, Toolbar, Box , Container} from '@mui/material';
+import { CustomAppBar, CustomDrawer } from './components/templates/CustomAppBar';
+import MenuIcon from '@mui/icons-material/Menu';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
+const defaultTheme = createTheme()
+
 const App = () => {
+  const [toggleOpen, setToggleOpen] = React.useState(true);
+  const toggleDrawer = () => {
+    setToggleOpen(!toggleOpen);
+  };
+
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
 
   return (
-    <Provider store={store}>
+    <Provider store={store} >
       <Router>
-        <Fragment>
-          <Navbar />
-          <Route exact path='/' component={Landing} />
-          <section>
-            <Alert />
-            <Switch>
-              <Route exact path='/register' component={Register} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/profiles' component={Profiles} />
-              <Route exact path='/profile/:id' component={Profile} />
-              <PrivateRoute exact path='/dashboard' component={Dashboard} />
-              <PrivateRoute exact path = "/Gameboard1" component = {GameDashboard1} />
-              <PrivateRoute
-                exact
-                path='/create-profile'
-                component={CreateProfile}
-              />
-              <PrivateRoute
-                exact
-                path='/edit-profile'
-                component={EditProfile}
-              />
-              <PrivateRoute
-                exact
-                path='/add-experience'
-                component={AddExperience}
-              />
-              <PrivateRoute
-                exact
-                path='/add-education'
-                component={AddEducation}
-              />
-              <PrivateRoute exact path='/posts' component={Posts} />
-              <PrivateRoute exact path='/posts/:id' component={Post} />
-            </Switch>
-            <Redirect from='*' to='/' component={Landing} />
-          </section>
-        </Fragment>
-        {/* <Footer /> */}
-      </Router>
-    </Provider>
+      <ThemeProvider theme={defaultTheme}>
+        <Box sx={{ display: 'flex' }} >
+        <CustomAppBar position="absolute" open={toggleOpen}>
+            <Toolbar
+                sx={{
+                pr: '24px', // keep right padding when drawer closed,
+                backgroundColor: "#003c71"
+                }}
+            >
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={toggleDrawer}
+                    sx={{
+                        marginRight: '36px',
+                        ...(toggleOpen && { display: 'none' }),
+                    }}
+                >
+                <MenuIcon />
+                </IconButton>
+                <Navbar />      
+                </Toolbar>
+            
+            </CustomAppBar>
+          
+      
+          <CustomDrawer variant="permanent" open={toggleOpen}>
+              <Toolbar
+                  sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
+                  }}
+              >
+                  <IconButton onClick={toggleDrawer} style={{color: "white", background : "black"}}>
+                      <MenuIcon />
+                  </IconButton>
+              </Toolbar>
+              <List component="nav">
+                  <Link to="/gameBoard1">
+                    <ListItemButton>
+                        GameBoard1
+                    </ListItemButton>
+                  </Link>
+                  
+                <Divider sx={{ my: 1 }} />
+              </List>    
+          </CustomDrawer>
+
+          <Box
+              component="main"
+              sx={{
+                  backgroundColor: (theme) =>
+                  theme.palette.mode === 'light'
+                      ? theme.palette.grey[100]
+                      : theme.palette.grey[900],
+                  flexGrow: 1,
+                  height: '100vh',
+                  overflow: 'auto',
+              }}
+          >
+
+              <Toolbar />
+              <Container>
+              
+              <Fragment>
+                
+                <Route exact path='/' component={Landing} />
+                <section>
+                  <Alert />
+                  <Switch>
+                    <Route exact path='/register' component={Register} />
+                    <Route exact path='/login' component={Login} />
+                    <Route exact path='/profiles' component={Profiles} />
+                    <Route exact path='/profile/:id' component={Profile} />
+                    <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                    <PrivateRoute exact path = "/Gameboard1" component = {GameDashboard1} />
+                    <PrivateRoute
+                      exact
+                      path='/create-profile'
+                      component={CreateProfile}
+                    />
+                    <PrivateRoute
+                      exact
+                      path='/edit-profile'
+                      component={EditProfile}
+                    />
+                    <PrivateRoute
+                      exact
+                      path='/add-experience'
+                      component={AddExperience}
+                    />
+                    <PrivateRoute
+                      exact
+                      path='/add-education'
+                      component={AddEducation}
+                    />
+                    <PrivateRoute exact path='/posts' component={Posts} />
+                    <PrivateRoute exact path='/posts/:id' component={Post} />
+                  </Switch>
+                  <Redirect from='*' to='/' component={Landing} />
+                </section>
+              </Fragment>
+              {/* <Footer /> */}
+            
+              </Container>
+          </Box>
+          
+        
+        </Box>
+        </ThemeProvider>
+        </Router>
+      </Provider>
   );
 }
 

@@ -23,11 +23,13 @@ const Dashboard = ({
     <Spinner />
   ) : (
     <Fragment>
-      <h1 className='large text-primary'>Dashboard</h1>
-      <p className='lead'>
-        <i className='fas fa-user'></i>Welcome {user && user.name}!
-      </p>
-      <p>This is an educational gaming website designed to teach accounting principles.</p>
+      <div  className="px-36 py-20">
+        <h1 className='large text-primary'>Dashboard</h1>
+        <p className='lead'>
+          <i className='fas fa-user'></i>Welcome {user && user.name}!
+        </p>
+        <p>This is an educational gaming website designed to teach accounting principles.</p>
+      </div>
     </Fragment>
   );
 
