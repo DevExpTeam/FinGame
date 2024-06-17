@@ -46,7 +46,7 @@ const App = () => {
         <Fragment>
           <Navbar />
           <Route exact path='/' component={Landing} />
-          <section className='px-36 py-20'>
+          <section>
             <Alert />
             <Switch>
               <Route exact path='/register' component={Register} />

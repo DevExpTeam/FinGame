@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
+import logo from '../../img/logo-icon.png';
 
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
@@ -49,11 +50,12 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   );
 
   return (
-    <nav className='navbar bg-dark'>
+    
+    <nav className='navbar bg-dark border-gray-200 dark:bg-gray-900 text-2xl'>
       <h1>
-        <Link to='/'>
-          {' '}
-          <i className='fas fa-code'></i> FinGames{' '}
+        <Link to='/' className= "flex justify-center align-center items-center">
+          <img src={logo} style={{width : "150px"}}/>
+          <p className='font-serif text-center text-3xl italic'> Games </p>
         </Link>
       </h1>
       {!loading && (

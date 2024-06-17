@@ -207,7 +207,7 @@ const GameDashboard1 = ({
   }, [game1]);
 
   return (
-    <div className="flex justify-between h-full py-10">
+    <div className="flex justify-between h-full px-36 py-20">
       {source ?
         <div className="fixed transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
           <video autoPlay loop muted className="grow" style={{ width: "150rem", height: "150rem" }}>
