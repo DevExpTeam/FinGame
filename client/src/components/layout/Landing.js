@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -11,19 +13,23 @@ export const Landing = ({ isAuthenticated }) => {
     <section className='landing'>
       <div className='dark-overlay'>
         <div className='landing-inner'>
-          <h1 className='x-large'>Developer Connector</h1>
+          <h1 className='x-large'>Financial Games</h1>
           <p className='lead'>
-            Create a developer profile/portfolio, share posts and get help from
-            other developers
+            {/* Create a developer profile/portfolio, share posts and get help from
+            other developers */}
           </p>
-          <div className='buttons'>
-            <Link to='/register' className='btn btn-primary'>
-              Sign Up
+          <Stack direction="row" spacing={2}>
+            <Link to='/register'>
+              <Button variant="contained" href="/register">
+                Sign Up
+              </Button>
             </Link>
-            <Link to='/login' className='btn btn-light'>
-              Login
+            <Link to='/login'>
+              <Button variant="contained" color="success" href="/register">
+                Login
+              </Button>
             </Link>
-          </div>
+          </Stack>
         </div>
       </div>
     </section>

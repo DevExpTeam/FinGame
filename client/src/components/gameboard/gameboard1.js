@@ -66,7 +66,7 @@ const GameDashboard1 = ({
   const openEndAlert = async () => {
     const result = await Swal.fire({
       title: score >= 80 ? "Congratulations!" : "Cheer up!",
-      text: "Would you like to continue the game?\nYour bonus will also carry over.",
+      text: "Would you like to continue the game?\nYour bonus level will also carry over.",
       type: "success",
       confirmButtonText: "Yes",
       confirmButtonColor: "#2ECC71",
@@ -218,7 +218,7 @@ const GameDashboard1 = ({
         <></>
       }
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
+        <div className="flex flex-col items-center p-4 pt-7 rounded-lg sticky top-0">
           <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
           <div className="h-7" />
           <Droppable droppableId="account">
@@ -286,7 +286,7 @@ const GameDashboard1 = ({
             </Droppable>
           ))}
         </div>
-        <div className="flex flex-col items-center pt-36 pl-5">
+        <div className="flex flex-col items-center pt-36 pl-5 sticky top-36">
           <ScoreboardItem
             label="Max Score"
             value={scores?.max}

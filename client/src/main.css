@@ -586,11 +586,20 @@ video {
 .relative {
   position: relative;
 }
+.sticky {
+  position: sticky;
+}
 .left-1\/2 {
   left: 50%;
 }
+.top-0 {
+  top: 0px;
+}
 .top-1\/2 {
   top: 50%;
+}
+.top-36 {
+  top: 9rem;
 }
 .m-1 {
   margin: 0.25rem;
@@ -787,9 +796,9 @@ video {
   padding-left: 0px;
   padding-right: 0px;
 }
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 .px-36 {
   padding-left: 9rem;
@@ -951,7 +960,7 @@ video {
 
 
 :root {
-  --primary-color: #9032ED;
+  --primary-color: #003C71;
   --dark-color: #787d82;
   --light-color: #f4f4f4;
   --danger-color: #da1a2d;
@@ -1256,8 +1265,8 @@ button {
   padding: 0.2rem 3rem;
   z-index: 1;
   width: 100%;
-  min-height: 50px;
-  height: 9vh;
+  min-height: 40px;
+  height: 6vh;
   top: 0;
   background-color: #003C71;
   opacity: 0.9;
@@ -1291,6 +1300,14 @@ button {
 
 .navbar a:hover {
   color: var(--primary-color);
+}
+
+.css-1oqqzyl-MuiContainer-root{
+  max-width: 5000px !important;
+  padding-left: 0 !important;
+  padding-right: 0!important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .navbar .welcome span {

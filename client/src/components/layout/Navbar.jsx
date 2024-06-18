@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 import logo from '../../img/logo-icon.png';
-import { Avatar, Badge, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip } from '@mui/material';
-
-
+import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 
 const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,12 +20,7 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   const authLinks = (
     <ul>
       <li>
-        <Link to='/Gameboard1' className="flex text-center items-center">
-          <span className='hide-sm font-serif text-center text-xl italic'>GameBoard1</span>
-        </Link>
-      </li>
-      <li>
-      <Tooltip title="Account settings">
+        <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
             size="small"
@@ -36,14 +29,13 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
-            <p  className='px-1 font-serif text-center text-white text-xl italic'>
+            <Avatar sx={{ width: 32, height: 32 }}>{user ? user.name.charAt(0): "A"}</Avatar>
+            <p className='px-3 font-serif text-center text-white text-xl italic'>
               {user ? user.name: ""}
             </p>
           </IconButton>
-          
         </Tooltip>
-      <Menu
+        <Menu
           anchorEl={anchorEl}
           id="account-menu"
           open={open}
@@ -78,11 +70,9 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-
-          <MenuItem onClick={handleClose}>
+          {/* <MenuItem onClick={handleClose}>
             Add another account
-          </MenuItem>
-
+          </MenuItem> */}
           <MenuItem onClick={logout}> 
               <i className='fas fa-sign-out-alt'></i>{' '}
               <span className='hide-sm'>Logout</span>
@@ -108,21 +98,16 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   );
 
   return (
-  
-
     <nav className='navbar bg-dark border-gray-200 text-xl'>
-       <h1>
-         <Link to='/' className= "flex justify-center align-center items-center">
-           <img src={logo} style={{width : "150px", background : "white", borderRadius : 15, marginRight : 15}}/>
-         </Link>
-       </h1>
-       {!loading && (
-         <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
-       )}
-
-     </nav>
-             
-       
+      <h1>
+        <Link to='/' className= "flex justify-center align-center items-center">
+          <img src={logo} style={{width : "120px", background : "white", borderRadius : 15, marginRight : 15}}/>
+        </Link>
+      </h1>
+      {!loading && (
+        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+      )}
+    </nav>
   );
 };
 

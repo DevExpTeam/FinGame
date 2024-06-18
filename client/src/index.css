@@ -10,7 +10,7 @@
 
 
 :root {
-  --primary-color: #9032ED;
+  --primary-color: #003C71;
   --dark-color: #787d82;
   --light-color: #f4f4f4;
   --danger-color: #da1a2d;
@@ -315,8 +315,8 @@ button {
   padding: 0.2rem 3rem;
   z-index: 1;
   width: 100%;
-  min-height: 50px;
-  height: 9vh;
+  min-height: 40px;
+  height: 6vh;
   top: 0;
   background-color: #003C71;
   opacity: 0.9;
