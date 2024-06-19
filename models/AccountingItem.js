@@ -1,6 +1,6 @@
  const mongoose = require('mongoose');
 
-const GameSchema = new mongoose.Schema({
+const AccountingItemSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -15,4 +15,4 @@ const GameSchema = new mongoose.Schema({
     },
 });
 
-module.exports = Game = mongoose.model('first_game', GameSchema);
+module.exports = Game = mongoose.model('accounting_item', AccountingItemSchema);

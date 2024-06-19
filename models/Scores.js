@@ -1,6 +1,6 @@
  const mongoose = require('mongoose');
 
-const GameSchema = new mongoose.Schema({
+const ScoreSchema = new mongoose.Schema({
     gameType: {
         type: Number,
         required: true,
@@ -19,4 +19,4 @@ const GameSchema = new mongoose.Schema({
     },
 });
 
-module.exports = Scores = mongoose.model('score', GameSchema);
+module.exports = Scores = mongoose.model('score', ScoreSchema);

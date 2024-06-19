@@ -1,10 +1,13 @@
 import {
-  GET_GAME1,
+  GET_GAME2,
+  GET_GAME2_ITEMS,
   GAME_ERROR
 } from '../actions/types';
 
 const initialState = {
-  game1: [],
+  question: "",
+  answers: [],
+  itemNames: [],
   loading: true,
   error: {},
 };
@@ -13,10 +16,17 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_GAME1:
+    case GET_GAME2:
       return {
         ...state,
-        game1: payload,
+        question: payload.question,
+        answers: payload.answers,
+        loading: false,
+      };
+    case GET_GAME2_ITEMS:
+      return {
+        ...state,
+        itemNames: payload,
         loading: false,
       };
     case GAME_ERROR:

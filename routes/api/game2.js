@@ -7,10 +7,14 @@ const AccountingItemSchema = require('../../models/AccountingItem');
 // @desc     Get all games
 // @access   Private
 router.get('/',  async (req, res) => {
+  const category = req.query.category;
+  let result;
+
   try {
     // Sort by date to get the most recent post.
-    const game1 = await AccountingItemSchema.aggregate([{ $sample: { size: 10 } }]);
-    res.json(game1);
+    if(category === "main") result = await AccountingItemSchema.aggregate([{ $sample: { size: 10 } }]);
+    else result = await AccountingItemSchema.find({ answer: category });
+    res.json(result);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -13,6 +13,7 @@ import endSound from '../../sound/end.mp3';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getGame1 } from '../../actions/game';
 import { getScores, addScores } from '../../actions/scores';
+import { debitCategories, creditCategories, categoryNames } from './Constants';
 import ScoreboardItem from './ScoreboardItem';
 import video0 from '../../video/0.webm';
 import video3 from '../../video/3.webm';
@@ -23,21 +24,6 @@ import video7 from '../../video/7.webm';
 import video8 from '../../video/8.webm';
 import video9 from '../../video/9.webm';
 import video10 from '../../video/10.webm';
-import '../../index.css';
-
-const assetCategories = ["currentAssets", "propertyPlantEquipment", "intangibleAssets", "financialAssets", "digitalAssets"]
-const liabilitiesCategories = ["currentLiabilities", "longTermLiabilities", "accruals", "capital"]
-const categoryNames = {
-  currentAssets: "Current Assets",
-  propertyPlantEquipment: "Property, Plant & Equipment",
-  intangibleAssets: "Intangible Assets",
-  financialAssets: "Financial Assets",
-  digitalAssets: "Digital Assets",
-  currentLiabilities: "Current Liabilities",
-  longTermLiabilities: "Long-Term Liabilities",
-  accruals: "Accruals",
-  capital: "Capital"
-}
 
 const GameDashboard1 = ({
   auth: { user },
@@ -165,14 +151,14 @@ const GameDashboard1 = ({
       //wrong case
       new Audio(wrongSound).play();
       setCount(0);            //initialize count
-      if(score < 2) setScore(0);
-      else {
-        setScore(score - 2);
-        setAddition({ value: -2, bonus: 0 });
-        setTimeout(() => {
-          setAddition({ value: 0, bonus: 0 });
-        }, 900);
-      }
+      // if(score < 2) setScore(0);   //This is for preventing the score get minus
+      // else
+      setScore(score - 2);
+      setAddition({ value: -2, bonus: 0 });
+      setTimeout(() => {
+        setAddition({ value: 0, bonus: 0 });
+      }, 900);
+      
       return;
     }
 
@@ -218,7 +204,7 @@ const GameDashboard1 = ({
         <></>
       }
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col items-center p-4 pt-7 rounded-lg sticky top-0">
+        <div className="flex flex-col items-center p-4 pt-7 rounded-lg sticky top-7">
           <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
           <div className="h-7" />
           <Droppable droppableId="account">
@@ -227,7 +213,7 @@ const GameDashboard1 = ({
                 {boxes.account?.map((item, index) => (
                   <Draggable key={item._id} draggableId={item._id} index={index}>
                     {(provided, snapshot) => (
-                      <Tooltip title = {item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
+                      <Tooltip title={item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
                         {item.name}
                       </div></Tooltip>
                     )}
@@ -240,7 +226,7 @@ const GameDashboard1 = ({
         </div>
         <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md">  
           <h2 className="mb-4 uppercase font-bold text-xl text-blue-800">Debit balance</h2>
-          {assetCategories.map((droppableId) => (
+          {debitCategories.map((droppableId) => (
             <Droppable key={droppableId} droppableId={droppableId}>
               {(provided, snapshot) => (
                 <div className="flex flex-col items-center mt-4">
@@ -264,7 +250,7 @@ const GameDashboard1 = ({
         </div>
         <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg shadow-md">
           <h2 className="mb-4 uppercase font-bold text-xl text-green-800">Credit balance</h2>
-          {liabilitiesCategories.map((droppableId) => (
+          {creditCategories.map((droppableId) => (
             <Droppable key={droppableId} droppableId={droppableId}>
               {(provided, snapshot) => (
                 <div className="flex flex-col items-center mt-4">
