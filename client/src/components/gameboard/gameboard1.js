@@ -14,7 +14,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getGame1 } from '../../actions/game';
 import { getScores, addScores } from '../../actions/scores';
 import { debitCategories, creditCategories, categoryNames } from './Constants';
-import ScoreboardItem from './ScoreboardItem';
+import ScoreboardItem from './components/ScoreboardItem';
 import video0 from '../../video/0.webm';
 import video3 from '../../video/3.webm';
 import video4 from '../../video/4.webm';
@@ -204,7 +204,7 @@ const GameDashboard1 = ({
         <></>
       }
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col items-center p-4 pt-7 rounded-lg sticky top-7">
+        <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
           <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
           <div className="h-7" />
           <Droppable droppableId="account">
@@ -272,7 +272,7 @@ const GameDashboard1 = ({
             </Droppable>
           ))}
         </div>
-        <div className="flex flex-col items-center pt-36 pl-5 sticky top-36">
+        <div className="flex flex-col items-center pt-36 pl-5">
           <ScoreboardItem
             label="Max Score"
             value={scores?.max}

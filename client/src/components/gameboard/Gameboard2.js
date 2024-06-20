@@ -16,9 +16,8 @@ import { getGame2, getAccountingItems } from '../../actions/game';
 import { getScores, addScores } from '../../actions/scores';
 import { TAccount, TArray } from '../../models/TAccounting';
 import { debitCategories, creditCategories, categoryNames } from './Constants';
-import ScoreboardItem from './ScoreboardItem';
-import BVAInput from './BVAInput';
-import zIndex from '@mui/material/styles/zIndex';
+import ScoreboardItem from './components/ScoreboardItem';
+import TAccountItem from './components/TAccountItem';
 
 const GameDashboard1 = ({
   auth: { user },
@@ -119,35 +118,50 @@ const GameDashboard1 = ({
       [destDroppableId]: destItems,
     });
 
+    //increase the length of TArray
     if(destDroppableId !== "account") {
-      //increase the length of TArray
       let destType = destDroppableId.includes("debit") ? "debit" : "credit";
       let destArray = destType === "debit" ? debitArray : creditArray;
       if(Number(destDroppableId.match(/\d+$/)) === destArray.array.length) {
         //if we put to the last TAccount, TArray will increase
         let boxName = `${destType}${destArray.array.length + 1}`;
-        destArray.array.push(new TAccount({ boxName }));
+        destArray.array.push(new TAccount({ type: destType, boxName }));
         destType === "debit" ? setDebitArray({ ...destArray }) : setCreditArray({ ...destArray });
         boxes[boxName] = [];
         setBoxes({ ...boxes });
       }
     }
 
+    //decrease the length of TArray
     if(srcDroppableId !== "account" && srcDroppableId !== destDroppableId) {
-      //decrease the length of TArray
       let srcType = srcDroppableId.includes("debit") ? "debit" : "credit";
       let srcArray = srcType === "debit" ? debitArray : creditArray;
-      if(
-        Number(srcDroppableId.match(/\d+$/)) === srcArray.array.length - 1 &&
-        boxes[`${srcType}${srcArray.array.length}`].length === 0
-      ) {
-        //if we get out from the vice-last TAccount and last TAccount is empty, TArray will decrease
+      if(Number(srcDroppableId.match(/\d+$/)) === srcArray.array.length - 1) {
+        //if the last TAccount is empty and we get out from the vice-last TAccount, TArray will decrease
         srcArray.array.pop();
         srcType === "debit" ? setDebitArray({ ...srcArray }) : setCreditArray({ ...srcArray });
       }
     }
   };
   
+  const handleInput = (input, oldTArray, setTArray, arrayIndex, balanceType, balanceIndex) => {
+    let value = Number(input.replace(/,/g, ""));
+    if(!value) value = "";
+    oldTArray.array[arrayIndex][balanceType][balanceIndex] = value;
+
+    //increase the length TAccount array
+    if(value && balanceIndex === oldTArray.array[arrayIndex][balanceType].length - 1) {
+      oldTArray.array[arrayIndex][balanceType].push(""); //if we put to the last input, balance will increase
+    }
+
+    //decrease the length TAccount array
+    if(!value && balanceIndex === oldTArray.array[arrayIndex][balanceType].length - 2) {
+      oldTArray.array[arrayIndex][balanceType].pop();  //if we put 0 to the vice-last input, balance will decrease
+    }
+
+    setTArray(new TArray({ ...oldTArray }));   //set state
+  }
+
   const initialize = () => {
     new Audio(startSound).play();
     getScores(2, user?.email);
@@ -169,11 +183,11 @@ const GameDashboard1 = ({
   useEffect(() => {
     initialize();
   }, []);
-
+console.log(debitArray, creditArray)
   return (
     <div className="flex justify-between h-full px-36 py-20">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col items-center p-4 pt-7 rounded-lg sticky top-7">
+        <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
           <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
           <div className="h-5" />
           <Select value={category} onChange={(e) => setCategory(e.target.value)} sx={{ width: '20rem', height: '3rem' }}>
@@ -192,9 +206,9 @@ const GameDashboard1 = ({
             {(provided, snapshot) => (
               <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-gray-200 bg-white rounded-lg p-1 min-h-96 overflow-y-auto" style={{ maxHeight: "60svh"}}>
                 {boxes["account"]?.map((item, index) => (
-                  <Draggable key={item._id} draggableId={item._id} index={index} style={{ zIndex: 1000 }}>
+                  <Draggable key={item._id} draggableId={item._id} index={index}>
                     {(provided, snapshot) => (
-                      <Tooltip title={item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg mb-1 shadow-md flex items-center justify-center w-72 h-8 font-sans font-semibold" style={{ ...provided.draggableProps.style, zIndex: 6000 }}>
+                      <Tooltip title={item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg mb-1 shadow-md flex items-center justify-center w-72 h-8 font-sans font-semibold">
                         {item.name}
                       </div></Tooltip>
                     )}
@@ -206,69 +220,29 @@ const GameDashboard1 = ({
           </Droppable>
         </div>
         <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md">  
-          <h2 className="mb-4 uppercase font-bold text-xl text-blue-800">Asset</h2>
-          {debitArray.array.map((TAccount) => (
-            <div>
-              <Droppable key={TAccount.boxName} droppableId={TAccount.boxName}>
-                {(provided, snapshot) => (
-                  <div className="flex flex-col items-center">
-                    <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-green-200 bg-white rounded-lg w-72 h-8 mb-1 shadow">
-                      {boxes[TAccount.boxName]?.map((item, index) => (
-                        <Draggable key={item._id} draggableId={item._id} index={index} style={{ zIndex: 1000 }}>
-                          {(provided, snapshot) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-8 font-sans font-semibold">
-                              {item.name}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  </div>
-                )}
-              </Droppable>
-              <Box sx={{ borderTop: 3, borderColor: 'black', width: '18rem', mt: 1, pb: 2, display: 'flex', flexDirection: 'row' }}>
-                <Box sx={{ borderRight: 3, borderColor: 'black', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <BVAInput />
-                </Box>
-                <Box sx={{ borderColor: 'divider', pb: 2, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <BVAInput />
-                </Box>
-              </Box>
-            </div>
+          <h2 className="mb-4 uppercase font-bold text-xl text-blue-800">Debit</h2>
+          <h4 className="mb-4 font-semibold text-lg text-blue-800">Total : ${debitArray.total}</h4>
+          {debitArray.array.map((TAccount, index) => (
+            <TAccountItem
+              TAccount={TAccount}
+              boxes={boxes}
+              onChange={(val, balType, balIndex) => 
+                handleInput(val, debitArray, setDebitArray, index, balType, balIndex)
+              }
+            />
           ))}
         </div>
         <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg shadow-md">
-          <h2 className="mb-4 uppercase font-bold text-xl text-green-800">Liabilities + Equity</h2>
-          {creditArray.array.map((TAccount) => (
-            <div>
-              <Droppable key={TAccount.boxName} droppableId={TAccount.boxName}>
-                {(provided, snapshot) => (
-                  <div className="flex flex-col items-center">
-                    <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-green-200 bg-white rounded-lg w-72 h-8 mb-1 shadow">
-                      {boxes[TAccount.boxName]?.map((item, index) => (
-                        <Draggable key={item._id} draggableId={item._id} index={index}>
-                          {(provided, snapshot) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-8 font-sans font-semibold">
-                              {item.name}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  </div>
-                )}
-              </Droppable>
-              <Box sx={{ borderTop: 3, borderColor: 'black', width: '18rem', mt: 1, pb: 2, display: 'flex', flexDirection: 'row' }}>
-                <Box sx={{ borderRight: 3, borderColor: 'black', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <BVAInput />
-                </Box>
-                <Box sx={{ borderColor: 'divider', pb: 2, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <BVAInput />
-                </Box>
-              </Box>
-            </div>
+          <h2 className="mb-4 uppercase font-bold text-xl text-green-800">Credit</h2>
+          <h4 className="mb-4 font-semibold text-lg text-blue-800">Total : ${creditArray.total}</h4>
+          {creditArray.array.map((TAccount, index) => (
+            <TAccountItem
+              TAccount={TAccount}
+              boxes={boxes}
+              onChange={(val, balType, balIndex) => 
+                handleInput(val, creditArray, setCreditArray, index, balType, balIndex)
+              }
+            />
           ))}
         </div>
         <div className="flex flex-col items-center pt-36 pl-5 sticky top-36">

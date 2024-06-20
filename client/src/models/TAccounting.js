@@ -1,9 +1,11 @@
 export class TAccount {
   constructor({
+    type = "",
     boxName ="",
     debit = [""],
     credit = [""],
   }) {
+    this.type = type;
     this.boxName = boxName;
     this.debit = debit;
     this.credit = credit;
@@ -16,6 +18,11 @@ export class TAccount {
   get totalCredit() {
     return this.credit.reduce((sum, item) => sum += Number(item), 0);
   }
+
+  get total() {
+    const value = this.totalDebit - this.totalCredit;
+    return this.boxName.includes("debit") ? value : -value;
+  }
 }
 
 export class TArray {
@@ -26,6 +33,6 @@ export class TArray {
   }
 
   get total() {
-    return this.array.reduce((sum, TAccount) => sum += TAccount.totalDebit - TAccount.totalCredit, 0);
+    return this.array.reduce((sum, TAccount) => sum += Number(TAccount.total), 0);
   }
 }

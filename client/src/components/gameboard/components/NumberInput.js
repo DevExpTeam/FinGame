@@ -32,8 +32,9 @@ export default function BVAInput({
   disabled,
   type,
   size = "small",
+  adornment = "$",
   decimalScale = 2,
-  onChange = () => ({})
+  onChange = () => {}
 }) {
 
   return (
@@ -42,15 +43,23 @@ export default function BVAInput({
       disabled={disabled}
       type={type}
       size={size}
-      onChange={(e) => {
-        onChange(e.target.value)
-      }}
+      onChange={(e) => onChange(e)}
       InputProps={{
         inputComponent: type === "text" ? null : NumericFormatCustom,
         inputProps: { decimalScale },
-        startAdornment: <InputAdornment position="start">$</InputAdornment>
+        startAdornment: <InputAdornment position="start">{adornment}</InputAdornment>
       }}
-      sx={{ width: '8rem', bgcolor: 'white', mt: 1, zIndex: 0 }}
+      sx={{ 
+        width: '8.5rem',
+        bgcolor: disabled ? "rgb(243 244 246)" : "white",
+        mt: 1, zIndex: 0,
+        '& .MuiInputBase-input.Mui-disabled': {
+          color: 'black',
+          fontWeight: 'bold',
+          opacity: 1,
+          '-webkit-text-fill-color': 'black',
+        },
+      }}
     />
   )
 }
