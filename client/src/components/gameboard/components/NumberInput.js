@@ -30,6 +30,7 @@ const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
 export default function BVAInput({
   value = 0,
   disabled,
+  disabledBold,   //make disabled text bold
   type,
   size = "small",
   adornment = "$",
@@ -54,9 +55,7 @@ export default function BVAInput({
         bgcolor: disabled ? "rgb(243 244 246)" : "white",
         mt: 1, zIndex: 0,
         '& .MuiInputBase-input.Mui-disabled': {
-          color: 'black',
-          fontWeight: 'bold',
-          opacity: 1,
+          fontWeight: disabledBold && 'bold',
           '-webkit-text-fill-color': 'black',
         },
       }}

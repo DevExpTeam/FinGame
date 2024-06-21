@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.1",
     "axios": "^0.21.1",
+    "currency-formatter": "^1.5.9",
     "moment": "^2.29.1",
     "postcss-cli": "^11.0.0",
     "react": "^17.0.1",

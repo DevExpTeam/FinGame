@@ -674,3 +674,16 @@ button {
 .fade-out-move-up {
   animation: fadeAndMoveUp 1s forwards;
 }
+
+/* infinite twinkle effect */
+
+@keyframes twinkle {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.twinkle {
+  color: #C0392B;
+  animation: twinkle 2s infinite;
+}

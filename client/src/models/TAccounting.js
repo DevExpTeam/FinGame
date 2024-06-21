@@ -1,11 +1,11 @@
 export class TAccount {
   constructor({
-    type = "",
+    name = "",
     boxName ="",
     debit = [""],
     credit = [""],
   }) {
-    this.type = type;
+    this.name = name;
     this.boxName = boxName;
     this.debit = debit;
     this.credit = credit;
