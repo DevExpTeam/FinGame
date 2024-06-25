@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import CurrencyFormatter from "currency-formatter";
-import { Tooltip, Select, MenuItem, Card, CardContent, Typography } from '@mui/material';
+import { Tooltip, Select, MenuItem, Card, CardContent, Typography, Checkbox } from '@mui/material';
 import Swal from "sweetalert2";
 import startSound from '../../sound/start.mp3';
 import wrongSound from '../../sound/wrong.mp3';
@@ -52,7 +52,7 @@ const GameDashboard1 = ({
   game2: { itemNames, question, answers, loading: gameLoading },
 }) => {
 
-  const [showAnswer, setShowAnswer] = useState(false);    //whether to show answers or not
+  const [showAnswer, setShowAnswer] = useState(true);    //whether to show answers or not
   const [score, setScore] = useState(0);
   const [addition, setAddition] = useState(0);    //show addition to the score
   const [category, setCategory] = useState("currentAssets");
@@ -216,7 +216,8 @@ const GameDashboard1 = ({
   }
 
   const equalCondition = () => {
-    return Math.abs(debitArray.total - creditArray.total) < 0.000001;
+    let difference = showAnswer ? (debitArray.total - creditArray.total) : (debitAnswer.total - creditAnswer.total);
+    return Math.abs(difference) < 0.000001;
   }
 
   useEffect(() => {
@@ -281,7 +282,7 @@ const GameDashboard1 = ({
           <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md">
             <h2 className="mt-6 mb-4 uppercase font-bold text-xl text-blue-800">Debit</h2>
             <h4 className={`mb-14 text-lg font-sans font-bold ${equalCondition() ? "text-cyan-800" : "twinkle"}`}>
-              Total : {CurrencyFormatter.format((showAnswer ? debitAnswer : debitArray).total, { code: "USD" })}
+              Total : {CurrencyFormatter.format((showAnswer ? debitAnswer.total : debitArray.total), { code: "USD" })}
             </h4>
             {showAnswer ? (
               debitAnswer?.array?.map((TAccount, index) => <TAccountItem key={index} TAccount={TAccount} />)
@@ -302,7 +303,7 @@ const GameDashboard1 = ({
           <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg shadow-md">
             <h2 className="mt-6 mb-4 uppercase font-bold text-xl text-green-800">Credit</h2>
             <h4 className={`mb-14 text-lg font-sans font-bold ${equalCondition() ? "text-cyan-800" : "twinkle"}`}>
-              Total : {CurrencyFormatter.format((showAnswer ? creditAnswer : creditArray), { code: "USD" })}
+              Total : {CurrencyFormatter.format((showAnswer ? creditAnswer.total : creditArray.total), { code: "USD" })}
             </h4>
             {showAnswer ? (
               creditAnswer?.array?.map((TAccount, index) => <TAccountItem key={index} TAccount={TAccount} />)
