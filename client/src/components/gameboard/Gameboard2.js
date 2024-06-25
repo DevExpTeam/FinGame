@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import CurrencyFormatter from "currency-formatter";
-import { Tooltip, Select, MenuItem, Card, CardContent, Typography, Checkbox } from '@mui/material';
+import { FormControlLabel, Tooltip, Select, MenuItem, Card, CardContent, Typography, Checkbox, Button } from '@mui/material';
 import Swal from "sweetalert2";
 import startSound from '../../sound/start.mp3';
 import wrongSound from '../../sound/wrong.mp3';
@@ -52,7 +52,8 @@ const GameDashboard1 = ({
   game2: { itemNames, question, answers, loading: gameLoading },
 }) => {
 
-  const [showAnswer, setShowAnswer] = useState(true);    //whether to show answers or not
+  const [showAnswer, setShowAnswer] = useState(false);    //whether to show answers or not
+  const [submitDisabled, setSubmitDisabled] = useState(false);    //whether to disable submit button or not
   const [score, setScore] = useState(0);
   const [addition, setAddition] = useState(0);    //show addition to the score
   const [category, setCategory] = useState("currentAssets");
@@ -190,16 +191,27 @@ const GameDashboard1 = ({
 
   const evaluate = () => {
     //input values to the input field in every TAccount
-    let prompt = [], answer = [];
+    let prompt = [], answer = [], count = 0;    //count is used to count how many answers are right
 
+    if(!equalCondition()) {
+      getMinusScore();
+      Swal.fire({
+        title: "Imbalance!",
+        text: "Please compare the total debit and the total credit.",
+        type: "error",
+        confirmButtonText: "OK",
+        showCloseButton: true,
+      });
+      return;
+    }
     //create prompt array
     debitArray.array.map((TAccount) => {
       TAccount.debit.map((val) => {val && prompt.push(`${boxes[TAccount.boxName][0]?.name} debit ${val}`)});
-      TAccount.credit.map((val) => {val && prompt.push(`${TAccount.name} credit ${val}`)});
+      TAccount.credit.map((val) => {val && prompt.push(`${boxes[TAccount.boxName][0]?.name} credit ${val}`)});
     })
     creditArray.array.map((TAccount) => {
-      TAccount.debit.map((val) => {val && prompt.push(`${TAccount.name} debit ${val}`)});
-      TAccount.credit.map((val) => {val && prompt.push(`${TAccount.name} credit ${val}`)});
+      TAccount.debit.map((val) => {val && prompt.push(`${boxes[TAccount.boxName][0]?.name} debit ${val}`)});
+      TAccount.credit.map((val) => {val && prompt.push(`${boxes[TAccount.boxName][0]?.name} credit ${val}`)});
     })
 
     //create answer array
@@ -212,11 +224,39 @@ const GameDashboard1 = ({
       TAccount.credit.map((val) => {val && answer.push(`${TAccount.name} credit ${val}`)});
     })
 
-    console.log(prompt, answer)
+    answer.map((ans) => {
+      let index = prompt.indexOf(ans);
+      if(index >= 0) {
+        count++;
+        prompt.splice(index, 1);
+      }     //it means that there is a correct prompt for that answer
+    })
+    count -= prompt.length / 2;         //we deduct points when there lefts unnecessary prompts
+    let plusScore = score + Math.max(0, (100 * count / answer.length).toFixed(2));
+
+    //save scores
+    addScores({ gameType: 2, userEmail: user?.email, score: score + plusScore });
+    score + plusScore >= 80 ? new Audio(victorySound).play() : new Audio(endSound).play();
+    Swal.fire({
+      title: score >= 80 ? "Congratulations!" : "Cheer up!",
+      text: `You got ${score + plusScore} points.`,
+      type: "success",
+      confirmButtonText: "OK",
+      showCloseButton: true,
+    });
+
+    //disable submit
+    setSubmitDisabled(true);
+
+    //update score panel
+    setScore(score + plusScore);
+    getScores(2, user?.email);
+    setAddition(plusScore);
+    setTimeout(() => setAddition(0), 900);
   }
 
   const equalCondition = () => {
-    let difference = showAnswer ? (debitArray.total - creditArray.total) : (debitAnswer.total - creditAnswer.total);
+    let difference = showAnswer ? (debitAnswer.total - creditAnswer.total) : (debitArray.total - creditArray.total);
     return Math.abs(difference) < 0.000001;
   }
 
@@ -235,7 +275,6 @@ const GameDashboard1 = ({
   useEffect(() => {
     new Audio(startSound).play();
     getScores(2, user?.email);
-    evaluate();
   }, []);
 // console.log(debitArray, creditArray)
 //console.log(debitAnswer, creditAnswer)
@@ -320,7 +359,7 @@ const GameDashboard1 = ({
               ))
             )}
           </div>
-          <div className="flex flex-col items-center pt-36 pl-5 sticky top-36">
+          <div className="flex flex-col items-center pt-36 sticky top-36">
             <ScoreboardItem
               label="Max Score"
               value={scores?.max}
@@ -345,6 +384,26 @@ const GameDashboard1 = ({
               value={score}
               bgColor="bg-purple-500"
               textColor="text-white"
+            />
+            <Button
+              variant="contained"
+              className="bg-blue-600 hover:bg-blue-800 text-white"
+              type="submit"
+              disabled={submitDisabled} // Add disabled prop
+              onClick={evaluate}
+            >
+              Submit
+            </Button>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showAnswer}
+                  onChange={(e) => {setShowAnswer(e.target.checked);setSubmitDisabled(true)}}
+                  color="primary"
+                />
+              }
+              label="Reveal Answer"
+              style={{ marginTop: "20px", marginLeft: "auto", marginRight: "auto", paddingRight: "12px" }}
             />
           </div>
         </DragDropContext>

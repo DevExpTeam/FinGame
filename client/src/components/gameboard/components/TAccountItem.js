@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import NumberInput from './NumberInput';
 
-export default function TArrayItem({ TAccount, boxes, twinkle, onChange }) {
+export default function TArrayItem({ TAccount, boxes, twinkle, onChange=()=>{} }) {
   return (
     <div className="mb-24">
       {boxes ? (      //boxes are used to check if the TArray is answer or input. If it is an answer, boxes is undefined
