@@ -1,6 +1,6 @@
-export const creditCategories = ["currentLiabilities", "longTermLiabilities", "accruals", "capital"]
 export const debitCategories
   = ["currentAssets", "propertyPlantEquipment", "intangibleAssets", "financialAssets", "digitalAssets"]
+export const creditCategories = ["currentLiabilities", "longTermLiabilities", "accruals", "capital"]
 export const categoryNames = {
   currentAssets: "Current Assets",
   propertyPlantEquipment: "Property, Plant & Equipment",

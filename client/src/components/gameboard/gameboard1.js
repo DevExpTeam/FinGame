@@ -98,6 +98,7 @@ const GameDashboard1 = ({
         //show msgbox
         setTimeout(() => {
           score + 10 + count >= 80 ? new Audio(victorySound).play() : new Audio(endSound).play();
+          getScores(1, user?.email);
           openEndAlert();
         }, count + 1 >= 3 ? 1000 : 600);
       }

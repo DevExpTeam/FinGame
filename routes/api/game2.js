@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const AccountingItemSchema = require('../../models/AccountingItem');
+const TAccountSchema = require('../../models/TAccount');
 
 // @route    GET api/games
 // @desc     Get all games
@@ -12,7 +13,10 @@ router.get('/',  async (req, res) => {
 
   try {
     // Sort by date to get the most recent post.
-    if(category === "main") result = await AccountingItemSchema.aggregate([{ $sample: { size: 10 } }]);
+    if(category === "main") {
+      let results = await TAccountSchema.aggregate([{ $sample: { size: 1 } }]);
+      result = results[0];
+    }
     else result = await AccountingItemSchema.find({ answer: category });
     res.json(result);
   } catch (err) {

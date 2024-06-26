@@ -15,4 +15,4 @@ const AccountingItemSchema = new mongoose.Schema({
     },
 });
 
-module.exports = Game = mongoose.model('accounting_item', AccountingItemSchema);
+module.exports = AccountingItem = mongoose.model('accounting_item', AccountingItemSchema);

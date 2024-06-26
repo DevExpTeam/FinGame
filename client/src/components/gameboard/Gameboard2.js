@@ -16,32 +16,6 @@ import { debitCategories, creditCategories, categoryNames } from './Constants';
 import ScoreboardItem from './components/ScoreboardItem';
 import TAccountItem from './components/TAccountItem';
 
-const problemText = "1. Joe starts a business consulting firm. He invests $100,000 and puts it in the general bank account. " +
-  "2. Joe obtains a loan from the bank for $100,000. He deposits the funds into the business bank account. " + 
-  "3. Joe purchases a desk for $1,000 on his credit card. " +
-  "4. Joe gets hired as a consultant and is paid $5,000. He deposits the check in the bank account. " +
-  "5. Joe gets a deposit from a new client for $2,500. He deposits the funds into his account. " +
-  "6. Joe invoices a client for $6,000 for services rendered. " +
-  "7. Joe withdrawals $3,500 from the bank account to pay himself. "
-
-const answerText = {
-  debitDataArray: [
-    { name: "General Bank Account", boxName: "debit", debit: [100000, 100000, 5000, 2500, ""], credit: [3500, ""] },
-    { name: "Accounts Receivables", boxName: "debit", debit: [6000, ""], credit: [""] },
-    { name: "Furniture & Fixtures", boxName: "debit", debit: [1000, ""], credit: [""] },
-  ],
-  creditDataArray: [
-    { name: "Customer Deposits", boxName: "credit", debit: [""], credit: [2500, ""] },
-    { name: "Credit Card Payable", boxName: "credit", debit: [""], credit: [1000, ""] },
-    { name: "Long-Term Loans", boxName: "credit", debit: [""], credit: [100000, ""] },
-    { name: "Owner Investment", boxName: "credit", debit: [""], credit: [100000, ""] },
-    { name: "Retained Earnings", boxName: "credit", debit: [3500], credit: [5000, 6000, ""] },
-  ]
-}
-
-const debitAnswer = new TArray({ array: answerText.debitDataArray.map((obj) => (new TAccount(obj))) });
-const creditAnswer = new TArray({ array: answerText.creditDataArray.map((obj) => (new TAccount(obj))) });
-
 const GameDashboard1 = ({
   auth: { user },
   getGame2,
@@ -49,34 +23,18 @@ const GameDashboard1 = ({
   getScores,
   addScores,
   scores: { scores, loading: scoreLoading },
-  game2: { itemNames, question, answers, loading: gameLoading },
+  game2: { itemNames, problemArray, debitAnswer, creditAnswer, loading: gameLoading },
 }) => {
 
   const [showAnswer, setShowAnswer] = useState(false);    //whether to show answers or not
   const [submitDisabled, setSubmitDisabled] = useState(false);    //whether to disable submit button or not
   const [score, setScore] = useState(0);
   const [addition, setAddition] = useState(0);    //show addition to the score
-  const [category, setCategory] = useState("currentAssets");
+  const [category, setCategory] = useState(debitCategories[0]);
   const [namesObject, setNamesObject] = useState({});       //save each category's accounting items
   const [boxes, setBoxes] = useState({ account: [], debit1: [], credit1: [] });
   const [debitArray, setDebitArray] = useState(new TArray({ array: [new TAccount({ boxName: "debit1" })] }));
   const [creditArray, setCreditArray] = useState(new TArray({ array: [new TAccount({ boxName: "credit1" })] }));
-
-  const openEndAlert = async () => {
-    const result = await Swal.fire({
-      title: score >= 80 ? "Congratulations!" : "Cheer up!",
-      text: "Would you like to continue the game?",
-      type: "success",
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#2ECC71",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      cancelButtonColor: "#E74C3C",
-      showCloseButton: true,
-    });
-
-    if (result.value);
-  }
   
   const getMinusScore = () => {
     setScore(score - 10);
@@ -231,7 +189,7 @@ const GameDashboard1 = ({
         prompt.splice(index, 1);
       }     //it means that there is a correct prompt for that answer
     })
-    count -= prompt.length / 2;         //we deduct points when there lefts unnecessary prompts
+    count -= prompt.length / 5;         //we deduct points when there lefts unnecessary prompts
     let plusScore = score + Math.max(0, (100 * count / answer.length).toFixed(2));
 
     //save scores
@@ -275,9 +233,9 @@ const GameDashboard1 = ({
   useEffect(() => {
     new Audio(startSound).play();
     getScores(2, user?.email);
+    getGame2();
   }, []);
-// console.log(debitArray, creditArray)
-//console.log(debitAnswer, creditAnswer)
+
   return (
     <div className="h-full px-36 py-20">
       <Card variant="outlined" style={{ width: '90%', borderRadius: 20, maxHeight: '25vh', overflowY: 'auto', marginBottom: '3rem', marginLeft: 'auto', marginRight: 'auto', padding: '5px' }}>
@@ -285,8 +243,8 @@ const GameDashboard1 = ({
           <Typography variant="h5" component="h2" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
             Problem
           </Typography>
-          {` ${problemText}`.split(/ \d\./g).map((item, i) => {
-            if(i) return <Typography variant="h6" component="p" style={{ fontFamily: '"Segoe UI Symbol"' }} key={i}>{i}.{item}</Typography>;
+          {problemArray.map((item, i) => {
+            return <Typography variant="h6" component="p" style={{ fontFamily: '"Segoe UI Symbol"' }} key={i}>{i + 1}. {item}</Typography>;
           })}
         </CardContent>
       </Card>
@@ -374,8 +332,8 @@ const GameDashboard1 = ({
             />
             {addition !== 0 &&
               <div className="w-40 fade-out-move-up">
-                <div className="fixed w-40 text-center font-bold text-3xl" style={{ color: "#C0392B" }}>
-                  {`– ${-addition}`}
+                <div className="fixed w-40 text-center font-bold text-3xl" style={{ color: addition > 0 ? "#27AE60" : "#C0392B" }}>
+                  {addition > 0 ? `+ ${addition}` : `– ${-addition}`}
                 </div>
               </div>
             }
