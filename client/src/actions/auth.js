@@ -12,7 +12,7 @@ import {
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
-axios. defaults. baseURL = 'http://localhost:5000';
+axios. defaults. baseURL = process.env.REACT_APP_BACKEND_URL;
 
 // Load User
 export const loadUser = () => async (dispatch) => {

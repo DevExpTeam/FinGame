@@ -194,7 +194,7 @@ const GameDashboard1 = ({
   }, [game1]);
 
   return (
-    <div className="flex justify-between h-full px-36 py-20">
+    <div className="h-full py-10">
       {source ?
         <div className="fixed transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
           <video autoPlay loop muted className="grow" style={{ width: "150rem", height: "150rem" }}>
@@ -205,16 +205,14 @@ const GameDashboard1 = ({
         <></>
       }
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
-          <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
-          <div className="h-7" />
+        <div className="fixed top-24 flex flex-col w-1/5 min-w-96 items-center p-6 pt-20 ml-20 rounded-lg">
           <Droppable droppableId="account">
             {(provided, snapshot) => (
-              <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-gray-200 bg-white rounded-lg w-96 min-h-96 p-1 overflow-y-auto">
+              <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-gray-200 bg-white rounded-lg w-full min-h-96 p-1 overflow-y-auto" style={{ maxHeight: '75vh' }}>
                 {boxes.account?.map((item, index) => (
                   <Draggable key={item._id} draggableId={item._id} index={index}>
                     {(provided, snapshot) => (
-                      <Tooltip title={item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
+                      <Tooltip title={item.tooltip} arrow><div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 py-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
                         {item.name}
                       </div></Tooltip>
                     )}
@@ -225,87 +223,92 @@ const GameDashboard1 = ({
             )}
           </Droppable>
         </div>
-        <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md">  
-          <h2 className="mb-4 uppercase font-bold text-xl text-blue-800">Debit balance</h2>
-          {debitCategories.map((droppableId) => (
-            <Droppable key={droppableId} droppableId={droppableId}>
-              {(provided, snapshot) => (
-                <div className="flex flex-col items-center mt-4">
-                  <h3 className="mb-2 font-bold text-md text-blue-600">{categoryNames[droppableId]}</h3>
-                  <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-blue-200 bg-white rounded-lg w-96 min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
-                    {boxes[droppableId]?.map((item, index) => (
-                      <Draggable key={item._id} draggableId={item._id} index={index}>
-                        {(provided, snapshot) => (
-                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 py-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
-                            {item.name}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </div>
-        <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg shadow-md">
-          <h2 className="mb-4 uppercase font-bold text-xl text-green-800">Credit balance</h2>
-          {creditCategories.map((droppableId) => (
-            <Droppable key={droppableId} droppableId={droppableId}>
-              {(provided, snapshot) => (
-                <div className="flex flex-col items-center mt-4">
-                  <h3 className="mb-2 font-bold text-md text-green-600">{categoryNames[droppableId]}</h3>
-                  <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-green-200 bg-white rounded-lg w-96 min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
-                    {boxes[droppableId]?.map((item, index) => (
-                      <Draggable key={item._id} draggableId={item._id} index={index}>
-                        {(provided, snapshot) => (
-                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
-                            {item.name}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </div>
-        <div className="flex flex-col items-center pt-36 pl-5">
-          <ScoreboardItem
-            label="Max Score"
-            value={scores?.max}
-            bgColor="bg-green-400"
-            textColor="text-white"
-          />
-          <ScoreboardItem
-            label="Average Score"
-            value={scores?.average?.toFixed(2)}
-            bgColor="bg-amber-500"
-            textColor="text-white"
-          />
-          {addition.value !== 0 &&
-            <div className="w-40 fade-out-move-up">
-              {addition.bonus !== 0 &&
-                <div className="fixed w-40 text-center font-semibold text-lg transform -translate-y-full" style={{ color: "#33CCFF" }}>
-                  {"+" + addition.bonus + "💎"}
-                </div>
-              }
-              <div className="fixed w-40 text-center font-bold text-3xl" style={{ color: addition.value > 0 ? "#27AE60" : "#C0392B" }}>
-                {addition.value > 0 ? "+" + addition.value : "–" + (-addition.value)}
-              </div>
+        <div className="flex w-full justify-center">
+          <div className="flex w-36" />
+          <div className="flex flex-wrap justify-center w-3/5">
+            <div className="flex flex-col w-1/3 min-w-96 items-center bg-blue-50 m-2 p-6 rounded-lg shadow-md">
+              <h2 className="my-4 uppercase font-bold text-xl text-blue-800">Debit balance</h2>
+              {debitCategories.map((droppableId) => (
+                <Droppable key={droppableId} droppableId={droppableId}>
+                  {(provided, snapshot) => (
+                    <div className="flex flex-col w-full items-center mt-4">
+                      <h3 className="mb-2 font-bold text-md text-blue-600">{categoryNames[droppableId]}</h3>
+                      <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-blue-200 bg-white rounded-lg w-full min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
+                        {boxes[droppableId]?.map((item, index) => (
+                          <Draggable key={item._id} draggableId={item._id} index={index}>
+                            {(provided, snapshot) => (
+                              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 py-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
+                                {item.name}
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    </div>
+                  )}
+                </Droppable>
+              ))}
             </div>
-          }
-          <ScoreboardItem
-            label="Current Score"
-            value={score}
-            bgColor="bg-purple-500"
-            textColor="text-white"
-          />
+            <div className="flex flex-col w-1/3 min-w-96 items-center bg-green-50 m-2 p-6 rounded-lg shadow-md">
+              <h2 className="my-4 uppercase font-bold text-xl text-green-800">Credit balance</h2>
+              {creditCategories.map((droppableId) => (
+                <Droppable key={droppableId} droppableId={droppableId}>
+                  {(provided, snapshot) => (
+                    <div className="flex flex-col w-full items-center mt-4">
+                      <h3 className="mb-2 font-bold text-md text-green-600">{categoryNames[droppableId]}</h3>
+                      <div ref={provided.innerRef} {...provided.droppableProps} className="border-2 border-green-200 bg-white rounded-lg w-full min-h-20 max-h-48 p-1 mb-4 shadow overflow-y-auto">
+                        {boxes[droppableId]?.map((item, index) => (
+                          <Draggable key={item._id} draggableId={item._id} index={index}>
+                            {(provided, snapshot) => (
+                              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-2 border-gray-300 bg-gray-100 rounded-lg m-1 p-1 shadow-md flex items-center justify-center h-12 font-sans font-semibold">
+                                {item.name}
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    </div>
+                  )}
+                </Droppable>
+              ))}
+            </div>
+          </div>
         </div>
       </DragDropContext>
+      <div className="fixed top-20 right-10 flex flex-col w-1/6 items-center pt-36 pl-5">
+        <ScoreboardItem
+          label="Max Score"
+          value={scores?.max}
+          bgColor="bg-green-400"
+          textColor="text-white"
+        />
+        <ScoreboardItem
+          label="Average Score"
+          value={scores?.average?.toFixed(2)}
+          bgColor="bg-amber-500"
+          textColor="text-white"
+        />
+        {addition.value !== 0 &&
+          <div className="w-40 fade-out-move-up">
+            {addition.bonus !== 0 &&
+              <div className="fixed w-40 text-center font-semibold text-lg transform -translate-y-full" style={{ color: "#33CCFF" }}>
+                {"+" + addition.bonus + "💎"}
+              </div>
+            }
+            <div className="fixed w-40 text-center font-bold text-3xl" style={{ color: addition.value > 0 ? "#27AE60" : "#C0392B" }}>
+              {addition.value > 0 ? "+" + addition.value : "–" + (-addition.value)}
+            </div>
+          </div>
+        }
+        <ScoreboardItem
+          label="Current Score"
+          value={score}
+          bgColor="bg-purple-500"
+          textColor="text-white"
+        />
+      </div>
     </div>
   );
 }

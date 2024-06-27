@@ -21,8 +21,8 @@ import Profile from './components/profile/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import PrivateRoute from './components/routing/PrivateRoute';
-import GameDashboard1 from './components/gameboard/Gameboard1';
-import GameDashboard2 from './components/gameboard/Gameboard2';
+import GameDashboard1 from './components/gameboard/DebitOrCredit';
+import GameDashboard2 from './components/gameboard/TAccount';
 import './index.css';
 import './main.css';
 

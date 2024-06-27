@@ -276,7 +276,7 @@ const GameDashboard1 = ({
               )}
             </Droppable>
           </div>
-          <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md">
+          <div className="flex flex-col w-1/5 min-w-80 items-center bg-blue-50 p-4 rounded-lg shadow-md">
             <h2 className="mt-6 mb-4 uppercase font-bold text-xl text-blue-800">Debit</h2>
             <h4 className={`mb-14 text-lg font-sans font-bold ${equalCondition() ? "text-cyan-800" : "twinkle"}`}>
               Total : {CurrencyFormatter.format((showAnswer ? debitAnswer.total : debitArray.total), { code: "USD" })}
@@ -297,7 +297,7 @@ const GameDashboard1 = ({
               ))
             )}
           </div>
-          <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg shadow-md">
+          <div className="flex flex-col w-1/5 min-w-80 items-center bg-green-50 p-4 rounded-lg shadow-md">
             <h2 className="mt-6 mb-4 uppercase font-bold text-xl text-green-800">Credit</h2>
             <h4 className={`mb-14 text-lg font-sans font-bold ${equalCondition() ? "text-cyan-800" : "twinkle"}`}>
               Total : {CurrencyFormatter.format((showAnswer ? creditAnswer.total : creditArray.total), { code: "USD" })}

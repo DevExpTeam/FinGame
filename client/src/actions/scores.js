@@ -5,7 +5,7 @@ import {
   POST_ERROR
 } from './types';
 
-axios. defaults. baseURL = 'http://localhost:5000';
+axios. defaults. baseURL = process.env.REACT_APP_BACKEND_URL;
 
 // Get scores
 export const getScores = (gameType, userEmail) => async (dispatch) => {

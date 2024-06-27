@@ -10,7 +10,7 @@ import {
   GET_REPOS,
 } from './types';
 
-axios. defaults. baseURL = 'http://localhost:5000';
+axios. defaults. baseURL = process.env.REACT_APP_BACKEND_URL;
 
 // Get Current User Profile
 export const getCurrentProfile = () => async (dispatch) => {

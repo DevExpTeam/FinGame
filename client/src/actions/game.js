@@ -6,7 +6,7 @@ import {
   GAME_ERROR
 } from './types';
 
-axios. defaults. baseURL = 'http://localhost:5000';
+axios. defaults. baseURL = process.env.REACT_APP_BACKEND_URL;
 
 // Get game1
 export const getGame1 = () => async (dispatch) => {
