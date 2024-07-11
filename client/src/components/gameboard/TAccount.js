@@ -30,7 +30,7 @@ const GameDashboard1 = ({
   const [submitDisabled, setSubmitDisabled] = useState(false);    //whether to disable submit button or not
   const [score, setScore] = useState(0);
   const [addition, setAddition] = useState(0);    //show addition to the score
-  const [category, setCategory] = useState(debitCategories[0]);
+  const [category, setCategory] = useState();
   const [namesObject, setNamesObject] = useState({});       //save each category's accounting items
   const [boxes, setBoxes] = useState({ account: [], debit1: [], credit1: [] });
   const [debitArray, setDebitArray] = useState(new TArray({ array: [new TAccount({ boxName: "debit1" })] }));
@@ -234,6 +234,7 @@ const GameDashboard1 = ({
     new Audio(startSound).play();
     getScores(2, user?.email);
     getGame2();
+    setCategory(debitCategories[0]);      //We want to the useEffect above takes effect in initializing
   }, []);
 
   return (
@@ -253,7 +254,7 @@ const GameDashboard1 = ({
           <div className="flex flex-col items-center p-4 pt-7 rounded-lg">
             <h2 className="mb-4 uppercase font-bold text-xl text-gray-800">Account</h2>
             <div className="h-5" />
-            <Select value={category} onChange={(e) => setCategory(e.target.value)} sx={{ width: '20rem', height: '3rem' }}>
+            <Select value={category || debitCategories[0]} onChange={(e) => setCategory(e.target.value)} sx={{ width: '20rem', height: '3rem' }}>
               {([...debitCategories, ...creditCategories]).map((category) => (
                 <MenuItem value={category}>{categoryNames[category]}</MenuItem>
               ))}
