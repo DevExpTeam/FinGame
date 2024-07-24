@@ -1,12 +1,12 @@
-# DevConnect Project - MERN Full Stack (Front End + Back End)
-
-This repository contains the API of "DevConnect" project handled by the back-end server. Features: user authorization and user registration and handles profile, posts and users. 
+# FinGame Project - MERN Full Stack (Front End + Back End)
 
 The server-side web framework Express.js is used to help deploy our own back-end server faster, work with databases, set up security and testing, as well as deploying the back end on a VM in the Cloud. 
 
 **Features**
 The project interactivity includes:
 
+- General Ledger Game
+- T Accounting Game
 - Updating profile info and avatar image
 - Adding and Deleting user's own profile only
 - Liking and unliking posts
