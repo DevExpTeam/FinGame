@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb://127.0.0.1:27017/myMongoDB",
-  "jwtSecret" : "mySecretFile"
+  "mongoURI": "mongodb://admin:3141592@127.0.0.1:27017/myMongoDB",
+  "jwtSecret": "mySecretFile"
 }
